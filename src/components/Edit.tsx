@@ -44,6 +44,10 @@ const Edit = ({ setVisible }: any) => {
     title: "",
     content: "",
   });
+  const diaryPatch = async () => {
+    const res = await cuxios.get("/diarys");
+    return res.data;
+  };
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value.title.length < 10) alert("제목은 10자 이상 입력해주세요!");
@@ -56,6 +60,7 @@ const Edit = ({ setVisible }: any) => {
         content: "",
       });
       setVisible(false);
+      window.location.reload();
     }
   };
   return (
