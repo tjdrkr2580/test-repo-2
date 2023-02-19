@@ -1,9 +1,10 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import AnimatedComponents from "../components/AnimatedComponents";
 import Button from "../components/Button";
-import Input from "../components/Input";
 import { flexCenter } from "../style/mixin";
+import { inputForm } from "../types/type";
 import { cuxios } from "../utils/cuxios";
 import useMovePage from "../utils/useNavi";
 
@@ -19,8 +20,10 @@ const SignWrapper = styled.section`
   align-items: flex-end;
   gap: 1.2rem;
   p {
-    cursor: pointer;
     font-size: 1.2rem;
+    &:hover {
+      text-decoration: underline;
+    }
   }
   input {
     width: 22rem;
@@ -37,76 +40,86 @@ const SignWrapper = styled.section`
 `;
 
 const Login = () => {
-  const { register, handleSubmit, reset, watch } = useForm();
-  const [isSign, setSign] = useState(false);
-  // const [info, setInfo] = useState({
-  //   id: "",
-  //   password: "",
-  // });
+  const { register, handleSubmit, reset } = useForm();
+  const [isSign, setSign] = useState(true);
   const onSignChange = () => {
     setSign(!isSign);
     reset();
   };
   const setPage = useMovePage();
 
-  const onSignup = async () => {
-    // const res = await cuxios.post("http://3.38.191.164/register", info);
-    // console.log(res);
-    // setPage("/");
-    console.log(watch());
-    reset();
+  const onSignup = async (data: inputForm) => {
+    try {
+      const res_o = await cuxios.post("http://3.38.191.164/register", data);
+      const res_t = await cuxios.post("http://3.38.191.164/login", data);
+      cuxios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${res_t.data.token}`;
+      setPage("/");
+      reset();
+    } catch (err) {
+      alert("해당 아이디를 가진 계정이 존재합니다!");
+      reset();
+    }
   };
-  const onSignin = async () => {
-    // const res = await cuxios.post("http://3.38.191.164/login", info);
-    // console.log(res);
-    // setPage("/");
-    console.log(watch());
-    reset();
+  const onSignin = async (data: inputForm) => {
+    try {
+      const res = await cuxios.post("http://3.38.191.164/login", data);
+      cuxios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${res.data.token}`;
+      setPage("/");
+      reset();
+    } catch (err) {
+      alert("계정을 다시 확인해주세요!");
+      reset();
+    }
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: any) => {
     if (isSign === false) {
-      onSignup();
+      onSignup(data);
     } else {
-      onSignin();
+      onSignin(data);
     }
   };
 
   return (
-    <LoginWrapper onSubmit={onSubmit}>
-      {isSign === true ? (
-        <SignWrapper>
-          <input
-            type="text"
-            placeholder="아이디를 입력해주세요"
-            {...register("id")}
-          />
-          <input
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            {...register("password")}
-          />
-          <p onClick={onSignChange}>계정이 존재하지 않나요?</p>
-          <Button>로그인</Button>
-        </SignWrapper>
-      ) : (
-        <SignWrapper>
-          <input
-            type="text"
-            placeholder="아이디를 입력해주세요"
-            {...register("id")}
-          />
-          <input
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            {...register("password")}
-          />
-          <p onClick={onSignChange}>돌아가기</p>
-          <Button>회원가입</Button>
-        </SignWrapper>
-      )}
-    </LoginWrapper>
+    <AnimatedComponents>
+      <LoginWrapper onSubmit={handleSubmit(onSubmit)}>
+        {isSign === true ? (
+          <SignWrapper>
+            <input
+              type="text"
+              placeholder="아이디를 입력해주세요"
+              {...register("id")}
+            />
+            <input
+              type="password"
+              placeholder="비밀번호를 입력해주세요"
+              {...register("password")}
+            />
+            <p onClick={onSignChange}>계정이 존재하지 않나요?</p>
+            <Button>로그인</Button>
+          </SignWrapper>
+        ) : (
+          <SignWrapper>
+            <input
+              type="text"
+              placeholder="아이디를 입력해주세요"
+              {...register("id")}
+            />
+            <input
+              type="password"
+              placeholder="비밀번호를 입력해주세요"
+              {...register("password")}
+            />
+            <p onClick={onSignChange}>돌아가기</p>
+            <Button>회원가입</Button>
+          </SignWrapper>
+        )}
+      </LoginWrapper>
+    </AnimatedComponents>
   );
 };
 

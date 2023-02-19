@@ -1,8 +1,8 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import AnimatedComponents from "../components/AnimatedComponents";
 import Button from "../components/Button";
+import { cuxios } from "../utils/cuxios";
 import useNavi from "../utils/useNavi";
 
 const blurAnimation = keyframes`
@@ -31,6 +31,17 @@ const HomeWrapper = styled.main`
 
 const Home = () => {
   const setPage = useNavi();
+  const isUser = async () => {
+    try {
+      const res = await cuxios.get("http://3.38.191.164/user");
+    } catch (err) {
+      alert("로그인을 다시 해주세요!");
+      setPage("/login");
+    }
+  };
+  useEffect(() => {
+    isUser();
+  }, []);
   return (
     <AnimatedComponents>
       <HomeWrapper>
