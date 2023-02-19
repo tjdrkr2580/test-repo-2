@@ -7,6 +7,7 @@ import GlobalStyle from "./style/GlobalStyle";
 import AnimatedCursor from "react-animated-cursor";
 import Edit from "./components/Edit";
 import { useState } from "react";
+import Login from "./pages/Login";
 
 function App() {
   if (process.env.NODE_ENV === "production") {
@@ -22,6 +23,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/diary" element={<Diary setVisible={setVisible} />} />
         <Route path="/diary/:id" element={<Detail />} />
       </Routes>

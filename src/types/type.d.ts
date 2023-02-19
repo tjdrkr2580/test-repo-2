@@ -12,19 +12,24 @@ export type commentType = {
   comment: string;
 };
 
-interface ButtonProps {
+export interface ButtonProps {
   children: ReactNode;
   size: string;
   onClick: () => void;
 }
 
-interface inputProps {
+export interface inputProps {
   wh: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   value: string;
 }
 
-interface commentProps {
+export interface commentProps {
   id: string | undefined;
+}
+
+export interface inputForm {
+  id: string;
+  password: string;
 }
