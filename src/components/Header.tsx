@@ -34,7 +34,6 @@ const Header = () => {
     <HeaderWrapper>
       <h1>한줄 일기.</h1>
       <LinkWrapper>
-        <CustomLink to="/">Home</CustomLink>
         <CustomLink to="/diary">Diary</CustomLink>
       </LinkWrapper>
     </HeaderWrapper>
