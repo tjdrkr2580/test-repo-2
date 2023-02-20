@@ -44,6 +44,8 @@ const Login = () => {
   const cookies = new Cookies();
   const { register, handleSubmit, reset } = useForm();
   const [isSign, setSign] = useState(true);
+  const expires = new Date();
+  const now = new Date();
   const onSignChange = () => {
     setSign(!isSign);
     reset();
@@ -54,6 +56,10 @@ const Login = () => {
     try {
       const res_o = await cuxios.post("http://3.38.191.164/register", data);
       const res_t = await cuxios.post("http://3.38.191.164/login", data);
+      expires.setMinutes(now.getMinutes() + 10);
+      cookies.set("diary-auth", res_t.data.token, {
+        expires,
+      });
       cuxios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${res_t.data.token}`;
@@ -67,7 +73,10 @@ const Login = () => {
   const onSignin = async (data: inputForm) => {
     try {
       const res = await cuxios.post("http://3.38.191.164/login", data);
-      cookies.set("diary-auth", res.data.token);
+      expires.setMinutes(now.getMinutes() + 10);
+      cookies.set("diary-auth", res.data.token, {
+        expires,
+      });
       setPage("/");
       reset();
     } catch (err) {

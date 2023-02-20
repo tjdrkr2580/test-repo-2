@@ -13,6 +13,7 @@ function App() {
   if (process.env.NODE_ENV === "production") {
     console.log = function no_console() {};
     console.warn = function no_console() {};
+    console.error = function no_console() {};
   }
   const [visible, setVisible] = useState(false);
   return (
