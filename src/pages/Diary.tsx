@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import Cookies from "react-cookie/cjs/Cookies";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -6,6 +8,7 @@ import Button from "../components/Button";
 import { flexCenter } from "../style/mixin";
 import { diaryType } from "../types/type";
 import { cuxios } from "../utils/cuxios";
+import useMovePage from "../utils/useNavi";
 
 const DiaryWrapper = styled(AnimatedComponents)`
   width: 100vw;
@@ -61,10 +64,26 @@ const DiaryList = styled.li`
 `;
 
 const Diary = ({ setVisible }: any) => {
+  const setPage = useMovePage();
+  const cookies = new Cookies();
   const diaryPatch = async () => {
     const res = await cuxios.get("/diarys");
     return res.data;
   };
+  const isUser = async () => {
+    try {
+      const res = await cuxios.get("http://3.38.191.164/user");
+    } catch (err) {
+      alert("로그인을 다시 해주세요!");
+      setPage("/login");
+    }
+  };
+  useEffect(() => {
+    cuxios.defaults.headers.common["Authorization"] = `Bearer ${cookies.get(
+      "diary-auth"
+    )}`;
+    isUser();
+  }, []);
   const onDelete = async (id: number) => {
     await cuxios.delete(`/diarys/${id}`);
     window.location.reload();
