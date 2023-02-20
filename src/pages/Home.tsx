@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Cookies } from "react-cookie";
 import styled, { keyframes } from "styled-components";
 import AnimatedComponents from "../components/AnimatedComponents";
 import Button from "../components/Button";
@@ -30,6 +31,7 @@ const HomeWrapper = styled.main`
 `;
 
 const Home = () => {
+  const cookies = new Cookies();
   const setPage = useNavi();
   const isUser = async () => {
     try {
@@ -40,6 +42,9 @@ const Home = () => {
     }
   };
   useEffect(() => {
+    cuxios.defaults.headers.common["Authorization"] = `Bearer ${cookies.get(
+      "diary-auth"
+    )}`;
     isUser();
   }, []);
   return (

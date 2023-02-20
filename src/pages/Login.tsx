@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Cookies from "react-cookie/cjs/Cookies";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import AnimatedComponents from "../components/AnimatedComponents";
@@ -40,6 +41,7 @@ const SignWrapper = styled.section`
 `;
 
 const Login = () => {
+  const cookies = new Cookies();
   const { register, handleSubmit, reset } = useForm();
   const [isSign, setSign] = useState(true);
   const onSignChange = () => {
@@ -65,9 +67,7 @@ const Login = () => {
   const onSignin = async (data: inputForm) => {
     try {
       const res = await cuxios.post("http://3.38.191.164/login", data);
-      cuxios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${res.data.token}`;
+      cookies.set("diary-auth", res.data.token);
       setPage("/");
       reset();
     } catch (err) {
