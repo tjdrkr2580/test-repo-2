@@ -45,7 +45,6 @@ const Header = () => {
   const onLogout = () => {
     cookies.remove("diary-auth");
     setPage("/");
-    console.log("dd");
   };
 
   return (
