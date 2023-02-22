@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Cookies } from "react-cookie";
 import useMovePage from "../utils/useNavi";
@@ -40,6 +40,8 @@ const CustomLink = styled(Link)`
 `;
 
 const Header = () => {
+  const location = useLocation();
+  console.log();
   const setPage = useMovePage();
   const cookies = new Cookies();
   const onLogout = () => {
@@ -52,9 +54,11 @@ const Header = () => {
       <h1>한줄 일기.</h1>
       <LinkWrapper>
         <CustomLink to="/diary">Diary</CustomLink>
-        <h1 onClick={onLogout} className="logout">
-          Log out
-        </h1>
+        {location.pathname !== "/login" && (
+          <h1 onClick={onLogout} className="logout">
+            Log out
+          </h1>
+        )}
       </LinkWrapper>
     </HeaderWrapper>
   );
